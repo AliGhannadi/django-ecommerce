@@ -1,0 +1,79 @@
+name: shop-dev
+services:
+  redis:
+    container_name: redis
+    image: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 60 1 --loglevel warning
+
+  backend:
+    build: .
+    container_name: django
+    working_dir: /app/core
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - envs/.env
+    depends_on:
+      redis:
+        condition: service_started
+      postgres_db:
+        condition: service_healthy
+
+  celery:
+     build: .
+     command: celery -A core worker --loglevel=info
+     volumes:
+      - .:/app
+     depends_on:
+      - redis
+      - backend
+
+  smtp4dev:
+    image: rnwood/smtp4dev:v3
+    restart: always
+    ports:
+      - "5001:80"
+      - "25:25"
+      - "143:143"
+    volumes:
+      - smtp4dev-data:/smtp4dev
+    environment:
+      - ServerOptions__HostName=smtp4dev
+  postgres_db:
+    image: postgres:16
+    container_name: shop_db
+    restart: unless-stopped
+    env_file:
+      - envs/.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+  pgadmin_gui:
+    image: dpage/pgadmin4
+    container_name: local_pgadmin
+    restart: unless-stopped
+    env_file:
+      - envs/.env
+
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres_db
+
+
+volumes:
+  pg_data:
+  smtp4dev-data:

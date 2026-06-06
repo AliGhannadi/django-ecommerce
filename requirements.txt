@@ -1,0 +1,49 @@
+# general  modules
+django >5.2,<5.3
+Pillow
+djangorestframework
+
+# env controlls
+python-decouple
+
+# third party modules
+requests
+markdown       
+django-filter  
+drf-spectacular
+djangorestframework-simplejwt
+django-cors-headers
+django-robots
+django-debug-toolbar
+
+
+# async socket 
+# channels[daphne] >4,<5
+# uvicorn[standard]
+# daphne
+# Twisted[tls,http2]
+
+
+# deployment module
+gunicorn
+whitenoise
+
+# tests
+pytest-django
+jsonschema
+
+
+# refactoring 
+black
+flake8
+Faker
+
+# background proccess and cache
+celery[redis]>5.3,<5.4
+django-redis
+
+# database client
+psycopg2-binary
+
+# monitoring
+sentry-sdk==0.10.2
