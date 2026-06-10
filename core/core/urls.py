@@ -34,6 +34,23 @@ urlpatterns = [
     
     # accounts urls
     path("accounts/",include("accounts.urls")),
+
+    # products urls
+    path("products/", include("products.urls")),
+
+    # cart urls
+    path("cart/", include("cart.urls")),
+
+    # orders urls
+    path("orders/", include("orders.urls")),
+
+    # payments urls
+    path("payments/", include("payments.urls")),
+
+    # social urls
+    path("social/", include("social.urls")),
+    
+    path('api-auth/', include('rest_framework.urls')),
     
     # sentry debug test
     # path('sentry-debug/', trigger_error),
