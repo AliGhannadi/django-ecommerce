@@ -12,6 +12,8 @@ class Category(models.Model):
         null=True,
         blank=True
         )
+    class Meta:
+        verbose_name_plural = "Categories"
     
 class Product(models.Model):
     title = models.CharField(max_length=255)

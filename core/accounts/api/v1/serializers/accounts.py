@@ -86,7 +86,7 @@ class LoginSerializer(serializers.ModelSerializer,EmailBackend):
         password = attrs.get('password')
         
         try:
-            user = User.objects.get(is_active=True, email=email)
+            user = User.objects.get(is_active=True, is_verified=True, email=email)
            
         except:
             raise CustomValidationException(

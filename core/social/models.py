@@ -13,7 +13,7 @@ class WishList(models.Model):
     updated_date = models.DateTimeField(auto_now=True)
     
 
-class Comments(models.Model):
+class Comment(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -21,3 +21,5 @@ class Comments(models.Model):
     )
     message = models.CharField(max_length=255)
     is_published = models.BooleanField(default=False)
+    class Meta:
+        verbose_name_plural = "Comments"

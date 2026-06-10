@@ -14,12 +14,15 @@ class UserManager(BaseUserManager):
     for authentication instead of usernames.
     """
 
-    def create_user(self, email, password, **extra_fields):
+    def create_user(self, email, phone_number, password, **extra_fields):
         """
         Create and save a User with the given email and password.
         """
         if not email:
             raise ValueError(_("The Email must be set"))
+        if not phone_number:
+            raise ValueError(_("The phone number must be set"))
+        
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
@@ -43,7 +46,7 @@ class UserManager(BaseUserManager):
 
 
 def phone_validator(value):
-        if not value.phone_number.startswith("09"):
+        if not value.startswith("09"):
             raise ValidationError("Error: Phone number must be started with 09. (Iran Format)")     
         if not value.isdigit():
             raise ValidationError("Error: You must enter digits.")
@@ -66,7 +69,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     updated_date = models.DateTimeField(auto_now=True)
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ["phone_number"]
 
     objects = UserManager()
     
@@ -93,7 +96,8 @@ class Profile(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     image = models.ImageField(upload_to="profile_pictures/", default="img/profile-avatar.png")
-    
+    def __str__(self):
+        return f"{self.user.email}"
     
 ##############################
 
