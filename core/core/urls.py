@@ -33,22 +33,22 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     
     # accounts urls
-    path("accounts/",include("accounts.urls")),
+    path("accounts/",include("accounts.urls"), name="accounts"),
 
     # products urls
-    path("products/", include("products.urls")),
+    path("products/", include("products.urls"), name="products"),
 
     # cart urls
-    path("cart/", include("cart.urls")),
+    path("cart/", include("cart.urls"), name="carts"),
 
     # orders urls
-    path("orders/", include("orders.urls")),
+    path("orders/", include("orders.urls"), name="orders"),
 
     # payments urls
-    path("payments/", include("payments.urls")),
+    path("payments/", include("payments.urls"), name="payments"),
 
     # social urls
-    path("social/", include("social.urls")),
+    path("social/", include("social.urls"), name="social"),
     
     path('api-auth/', include('rest_framework.urls')),
     

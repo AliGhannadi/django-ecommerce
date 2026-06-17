@@ -22,7 +22,7 @@ class CartItem(models.Model):
         on_delete=models.CASCADE,
         related_name="cartitems"
     )
-    quantity = models.IntegerField()
+    quantity = models.IntegerField(default=1)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     

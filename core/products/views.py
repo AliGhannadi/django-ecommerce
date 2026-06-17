@@ -1,10 +1,33 @@
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework import viewsets, status
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from .permissions import IsOwnerOrReadOnly, IsVendorOrReadOnly
 from .serializers import ProductSerializer
 from .models import Product
-
+from cart.models import CartItem, Cart
 
 class ProductViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly, IsVendorOrReadOnly]
     serializer_class = ProductSerializer
     queryset = Product.objects.filter(is_published=True).select_related("user", "category")
+    
+    @action(detail=True, methods=['POST'], permission_classes=[IsAuthenticated])
+    def add_to_cart(self, request, pk=None):
+        user = request.user
+        product = self.get_object()
+        cart, created = Cart.objects.get_or_create(user=user)
+        cart_item, is_created = CartItem.objects.get_or_create(
+        cart=cart,
+        product=product   
+        )
+        if not is_created:
+            cart_item.quantity += 1
+            cart_item.save()
+        return Response(
+            {"detail": "Product added to cart successfully. "},
+            status=status.HTTP_201_CREATED
+        )
+        
+        
+    

@@ -1,5 +1,6 @@
 from django.db import models
 from accounts.models import User
+from django.urls import reverse
 
 # Create your models here.
 class Category(models.Model):
@@ -36,4 +37,6 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=20, decimal_places=6)
     discount_rate = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
     is_published = models.BooleanField(default=True)
-
+    
+    def get_absolute_api_url(self):
+        return reverse("products-detail", kwargs={"pk": self.pk})
