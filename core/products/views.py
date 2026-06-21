@@ -6,11 +6,17 @@ from .permissions import IsOwnerOrReadOnly, IsVendorOrReadOnly
 from .serializers import ProductSerializer
 from .models import Product
 from cart.models import CartItem, Cart
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly, IsVendorOrReadOnly]
     serializer_class = ProductSerializer
     queryset = Product.objects.filter(is_published=True).select_related("user", "category")
+    
+    @method_decorator(cache_page(60 * 15, key_prefix='product_list'))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
     
     @action(detail=True, methods=['POST'], permission_classes=[IsAuthenticated])
     def add_to_cart(self, request, pk=None):
