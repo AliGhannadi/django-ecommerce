@@ -52,13 +52,13 @@ def phone_validator(value):
             raise ValidationError("Error: You must enter digits.")
         
 class User(AbstractBaseUser, PermissionsMixin):
-
     username = models.CharField(
         help_text=_("username"),
         max_length=150,
         unique=True,
-        null=True,
-        blank=True
+        null=False,
+        blank=False,
+        default=""
     )
     email = models.EmailField(_("email address"), unique=True)
     phone_number = models.CharField(max_length=11, validators=[phone_validator], unique=True, null=False, blank=False)

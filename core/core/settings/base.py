@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "payments",
     "products",
     "social",
+    "django_countries",
     
 ]
 

@@ -22,13 +22,14 @@ class UserAdminConfig(UserAdmin):
         "is_active",
         "is_staff",
         "is_verified",
+        "is_vendor",
         "created_date",
     )
     readonly_fields = ("created_date", "updated_date", "last_login")
     inlines = (ProfileInline,)
     fieldsets = (
         ("Authentication", {"fields": ("email", "username", "phone_number", "password")}),
-        ("Permissions", {"fields": ("is_staff", "is_active", "is_verified")}),
+        ("Permissions", {"fields": ("is_staff", "is_active", "is_verified", "is_vendor")}),
         (
             "Group Permissions",
             {
@@ -52,6 +53,7 @@ class UserAdminConfig(UserAdmin):
                     "is_active",
                     "is_staff",
                     "is_verified",
+                    "is_vendor",
                     "phone_number",
                     "username",
                 ),
