@@ -10,6 +10,10 @@ class Cart(models.Model):
     )
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
+    
+    @property
+    def total_price(self):
+        return sum(item.total_line_price for item in self.cartitems.all())
 
 class CartItem(models.Model):
     cart = models.ForeignKey(
@@ -25,4 +29,16 @@ class CartItem(models.Model):
     quantity = models.IntegerField(default=1)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
+    
+    @property
+    def total_line_price(self):
+        return self.quantity * self.product.price
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["cart", "product"],
+                name="unique_product_in_cart"
+            )
+        ]
+    
     

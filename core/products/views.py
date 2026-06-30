@@ -22,16 +22,25 @@ class ProductViewSet(viewsets.ModelViewSet):
     def add_to_cart(self, request, pk=None):
         user = request.user
         product = self.get_object()
+        try:
+            quantity = int(request.data.get("quantity", 1))
+            if quantity <= 0:
+                return Response({"error": "Quantity must be greater than 0."}, status=status.HTTP_400_BAD_REQUEST)
+        except (ValueError, TypeError):
+            return Response({"error": "Invalid quantity format."}, status=status.HTTP_400_BAD_REQUEST)
+        
         cart, created = Cart.objects.get_or_create(user=user)
         cart_item, is_created = CartItem.objects.get_or_create(
         cart=cart,
-        product=product   
+        product=product,
+        defaults={"quantity": quantity}
         )
+  
         if not is_created:
-            cart_item.quantity += 1
+            cart_item.quantity += quantity
             cart_item.save()
         return Response(
-            {"detail": "Product added to cart successfully. "},
+            {"detail": f"Added {quantity} x '{product.name}' to your cart successfully."},
             status=status.HTTP_201_CREATED
         )
         
