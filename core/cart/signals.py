@@ -12,7 +12,7 @@ def update_quantity_of_product(sender, instance, created, **kwargs):
         product.save()
         
         
-@receiver([signals.post_save, signals.post_delete], signals.post_delete, sender=Cart)
+@receiver([signals.post_save, signals.post_delete], sender=Cart)
 def invalidate_cart_cache(sender, instance, created, **kwargs):
     cache.delete_pattern('*cart_list*')
         

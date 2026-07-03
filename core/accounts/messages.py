@@ -2,7 +2,7 @@ class Messages:
     """Centralized API response and validation messages."""
 
     # Success
-    registered_successfully = "User registered successfully."
+    registered_successfully = "User registered successfully. Check your email for verification"
     authenticated_successfully = "Authenticated successfully."
     password_changed_successfully = "Password changed successfully."
     token_refreshed_successfully = "Token refreshed successfully."

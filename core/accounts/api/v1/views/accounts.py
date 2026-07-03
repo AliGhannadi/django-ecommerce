@@ -12,24 +12,70 @@ from django.conf import settings
 from django.middleware.csrf import get_token
 from django.views.decorators.csrf import csrf_exempt
 from accounts.authenticator import CustomCookieJWTAuthenticator
-
+from accounts.tasks import welcome_message
+from rest_framework.permissions import AllowAny
+from rest_framework import generics
+from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
+from django.contrib.auth import get_user_model
 
 class RegisterViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
-
-    @action(detail=True, methods=["post"], name="register")
-    def register(self, request):
+    permission_classes = [AllowAny]
+    # Generating jwt token
+    # passing it to a url
+    # if user enters that url
+    # verification successfully
+    
+    def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(
             data=request.data, context={"request": request}
         )
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+        email = user.email
+        token = self.get_token_for_user(user)
+        verification_link = f"https://127.0.0.1:8002/verify/{token}"
+        welcome_message.delay(user.username, email, verification_link)
         response = {
             "detail": Messages.registered_successfully
         }
         return Response(response, status=status.HTTP_200_OK)
-
+    @staticmethod
+    def get_token_for_user(user):
+        refresh = RefreshToken.for_user(user)
+        return str(refresh.access_token)
+    
+class EmailVerificationAPIView(generics.GenericAPIView):
+    def get(self, request, token, *args, **kwargs):
+        try:
+            token_obj = AccessToken(token)
+            user_id = token_obj["user_id"]
+            user = User.objects.get(id=user_id)
+            if not user.is_verified:
+                user.is_verified = True
+                user.save()
+                return Response(
+                    {"detail": "Email verified successfully"},
+                    status=status.HTTP_200_OK
+                )
+            else:
+                return Response(
+                    {"detail": "Email is already verified."},
+                    status=status.HTTP_200_OK
+                )        
+        except (TokenError, InvalidToken):
+            return Response(
+                {"error": "The verification link is invalid or has expired."}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except User.DoesNotExist:
+            return Response(
+                {"error": "User does not exist."}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
 
 class LoginViewSet(viewsets.ModelViewSet):
     """

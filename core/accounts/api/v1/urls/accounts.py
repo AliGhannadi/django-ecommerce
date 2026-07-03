@@ -7,10 +7,14 @@ urlpatterns = [
     path(
         "register",
         views.RegisterViewSet.as_view(
-            {"post": "register"}
+            {"post": "create"}
         ),
         name="register",
     ),
+    path("verify/<str:token>/",
+         views.EmailVerificationAPIView.as_view(),
+         name="verification"
+         ),
     path(
         "login",
         views.LoginViewSet.as_view({"post": "login"}),

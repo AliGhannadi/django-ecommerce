@@ -57,7 +57,7 @@ class Order(models.Model):
     @property
     def calculate_total_price(self):
         cart_items = self.cart.cartitems.all()
-        # cartitemo link mikonim be product
+        
         total_price = Decimal('0.00')
         for cart_item in cart_items:
             product_price = cart_item.product.price
