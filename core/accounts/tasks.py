@@ -2,7 +2,7 @@ from celery import shared_task
 from django.core.mail import send_mail
 
 @shared_task
-def welcome_message(username, email, verification_link):
+def email_verification(username, email, verification_link):
     email_body = (
         f"Hi {username},\n\n"
         "We hope you enjoy your time!\n"
@@ -15,3 +15,5 @@ def welcome_message(username, email, verification_link):
         recipient_list=[email],        
         fail_silently=False,
     )
+    
+

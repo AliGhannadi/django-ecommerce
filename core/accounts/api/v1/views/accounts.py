@@ -12,7 +12,7 @@ from django.conf import settings
 from django.middleware.csrf import get_token
 from django.views.decorators.csrf import csrf_exempt
 from accounts.authenticator import CustomCookieJWTAuthenticator
-from accounts.tasks import welcome_message
+from accounts.tasks import email_verification
 from rest_framework.permissions import AllowAny
 from rest_framework import generics
 from rest_framework_simplejwt.tokens import AccessToken
@@ -37,7 +37,7 @@ class RegisterViewSet(viewsets.ModelViewSet):
         email = user.email
         token = self.get_token_for_user(user)
         verification_link = f"https://127.0.0.1:8002/verify/{token}"
-        welcome_message.delay(user.username, email, verification_link)
+        email_verification.delay(user.username, email, verification_link)
         response = {
             "detail": Messages.registered_successfully
         }

@@ -26,16 +26,3 @@ class PaymentAdmin(admin.ModelAdmin):
     readonly_fields = ("created_date", "updated_date")
 
 
-@admin.register(Coupon)
-class CouponAdmin(admin.ModelAdmin):
-    list_display = (
-        "code",
-        "discount_percent",
-        "max_limit",
-        "expiration_date",
-        "created_date",
-        "updated_date",
-    )
-    list_filter = ("expiration_date", "created_date", "updated_date")
-    search_fields = ("code",)
-    readonly_fields = ("created_date", "updated_date")

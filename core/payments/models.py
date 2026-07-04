@@ -1,6 +1,9 @@
 from django.db import models
 from orders.models import Order
+from django.utils import timezone
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 # Create your models here.
 class PaymentMethod(models.Model):
     name = models.CharField(max_length=255)
@@ -38,12 +41,3 @@ class Payment(models.Model):
     updated_date = models.DateTimeField(auto_now=True)
     is_successful = models.BooleanField(default=False)
 
-class Coupon(models.Model):
-    code = models.CharField(max_length=15)
-    discount_percent = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
-    max_limit = models.IntegerField()
-    expiration_date = models.DateTimeField()
-    created_date = models.DateTimeField(auto_now_add=True)
-    updated_date = models.DateTimeField(auto_now=True)
-    
-    
