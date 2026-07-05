@@ -8,11 +8,7 @@ from .models import Coupon, UserCoupon
 from orders.models import Order 
 from django.utils import timezone
 from datetime import timedelta
-
-User = get_user_model()
-
-def generate_random_code():
-    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+from accounts.models import User
 
 @shared_task
 def send_welcome_coupon_task(user_id):
@@ -20,9 +16,8 @@ def send_welcome_coupon_task(user_id):
         user = User.objects.get(id=user_id)
         if user.is_verified:
             email = user.email
-            coupon_code = generate_random_code()
-            coupon = Coupon.objects.create(discount_percent=15.00, code=coupon_code, expiration_date=timezone.now() + timedelta(days=30))
-            UserCoupon.objects.create(user=user, coupon=coupon)
+            user_coupon = UserCoupon.objects.assign_unique_welcome_coupon(user)
+            coupon_code = user_coupon.coupon.code
             send_mail(
                 subject="Welcome! Your exclusive discount code is ready!",
                 message=f"Hi {user.username}, use code {coupon_code} for 15% off your first order!",

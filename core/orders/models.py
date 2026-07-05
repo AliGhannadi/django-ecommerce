@@ -38,7 +38,7 @@ class Order(models.Model):
     address = models.TextField()
     total_price = models.DecimalField(max_digits=20, decimal_places=6)
     coupon = models.ForeignKey(
-        'payments.Coupon',
+        'coupons.Coupon',
         on_delete=models.SET_NULL,
         related_name="orders",
         null=True,
