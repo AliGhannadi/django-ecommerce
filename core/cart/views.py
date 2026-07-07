@@ -9,7 +9,7 @@ from .serializers import CartSerializer
 from cart.models import CartItem, Cart
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-
+from django.shortcuts import redirect, render
 # Create your views here.
 class CartViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated, IsOwner]
@@ -49,5 +49,10 @@ class CartViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         cart = request.user.cart
         cart.cartitems.all().delete()
         return Response({"message": "Cart cleared"})
+    
+    @action(detail=False, methods=["get"])
+    def add_to_order(self, request):
+        return redirect('/orders/')
+        
     
     

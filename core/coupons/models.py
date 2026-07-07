@@ -52,9 +52,11 @@ class Coupon(models.Model):
             raise ValidationError({'current_usages': "This coupon has reached its maximum global usage limit."})
         if timezone.now() > self.expiration_date:
             raise ValidationError({'expiration_date': "This coupon has already expired."})
+        
     def save(self, *args, **kwargs):
         self.full_clean() 
         super().save(*args, **kwargs)
+        
     def redeem(self):
         with transaction.atomic():
             try:

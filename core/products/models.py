@@ -41,3 +41,6 @@ class Product(models.Model):
     
     def get_absolute_api_url(self):
         return reverse("products-detail", kwargs={"pk": self.pk})
+    
+    def __str__(self):
+        return self.title
