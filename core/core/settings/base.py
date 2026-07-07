@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "social",
     "django_countries",
     "coupons",
+    "azbankgateways",
     
 ]
 
@@ -303,3 +304,19 @@ AUTH_PROFILE_MODULE = "accounts.User"
 GZIP_MIN_LENGTH = 500
 
 ZARINPAL_MERCHANT_ID = config("ZARINPAL_MERCHANT_ID")
+
+AZ_IRANIAN_BANK_GATEWAYS = {
+    "GATEWAYS": {
+        "ZARINPAL": {
+            "MERCHANT_CODE": ZARINPAL_MERCHANT_ID,
+            "SANDBOX": 1,  # 0 disable, 1 active
+        },
+    },
+    "IS_SAMPLE_FORM_ENABLE": True,  
+    "DEFAULT": "ZARINPAL",
+    "CURRENCY": "IRR",  
+    "BANK_TIMEOUT": 10, 
+    "SETTING_VALUE_READER_CLASS": "azbankgateways.readers.DefaultReader",
+    "IS_SAFE_GET_GATEWAY_PAYMENT": False,  
+    "CUSTOM_APP": None,  
+}

@@ -10,19 +10,20 @@ User = get_user_model()
 
 
 class Transaction(models.Model):
+    class Status(models.TextChoices):
+        PENDING = 'pending', 'Pending'
+        COMPLETED = 'completed', 'Completed'
+        FAILED = 'failed', 'Failed'
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='transactions')
-    email = models.EmailField(null=True, blank=True)
-    phone_number = models.CharField(max_length=15, null=True, blank=True)
     description = models.TextField()
     authority = models.CharField(max_length=100, unique=True)
-    status = models.CharField(max_length=20)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Transaction: {self.id} - {self.authority[:10]}... ({self.status})"
 
 class Payment(models.Model):
-    amount = models.DecimalField(max_digits=20, decimal_places=6)
     order = models.ForeignKey(
         'orders.Order',
         on_delete=models.CASCADE,

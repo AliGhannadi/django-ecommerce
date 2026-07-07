@@ -20,10 +20,11 @@ from django.conf.urls.static import static
 from django.views.generic import TemplateView
 from rest_framework import permissions
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+from azbankgateways.urls import az_bank_gateways_urls
 
 from django.http import HttpResponse
 
-
+admin.autodiscover()
 
 def trigger_error(request):
    division_by_zero = 1 / 0
@@ -50,8 +51,11 @@ urlpatterns = [
     # social urls
     path("social/", include("social.urls"), name="social"),
     
+    # DRF Login path
     path('api-auth/', include('rest_framework.urls')),
     
+    # AZ Bank getaway
+    path("bankgateways/", az_bank_gateways_urls()),
     # sentry debug test
     # path('sentry-debug/', trigger_error),
     
