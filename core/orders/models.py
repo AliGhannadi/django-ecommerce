@@ -26,7 +26,7 @@ city_validator = RegexValidator(
 )
 
 class Order(models.Model):
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
         related_name="orders"
@@ -37,7 +37,7 @@ class Order(models.Model):
     zipcode = models.DecimalField(max_digits=12, decimal_places=0)
     address = models.TextField()
     total_price = models.DecimalField(max_digits=20, decimal_places=6)
-    coupon = models.ForeignKey(
+    coupon = models.OneToOneField(
         'coupons.Coupon',
         on_delete=models.SET_NULL,
         related_name="orders",
