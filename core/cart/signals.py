@@ -8,7 +8,7 @@ from django.core.cache import cache
 def update_quantity_of_product(sender, instance, created, **kwargs):
     if created:
         product = instance.product
-        product.quantity -= instance.quantity()
+        product.quantity -= instance.quantity
         product.save()
         
         

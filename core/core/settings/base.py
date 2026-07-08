@@ -318,5 +318,7 @@ AZ_IRANIAN_BANK_GATEWAYS = {
     "BANK_TIMEOUT": 10, 
     "SETTING_VALUE_READER_CLASS": "azbankgateways.readers.DefaultReader",
     "IS_SAFE_GET_GATEWAY_PAYMENT": False,  
-    "CUSTOM_APP": None,  
+    "CUSTOM_APP": None,
+    "TRACKING_CODE_QUERY_PARAM": "tc", 
+    "TRACKING_CODE_LENGTH": 16  
 }

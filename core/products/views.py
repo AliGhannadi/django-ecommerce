@@ -40,7 +40,7 @@ class ProductViewSet(viewsets.ModelViewSet):
             cart_item.quantity += quantity
             cart_item.save()
         return Response(
-            {"detail": f"Added {quantity} x '{product.name}' to your cart successfully."},
+            {"detail": f"Added {quantity} x '{product.title}' to your cart successfully."},
             status=status.HTTP_201_CREATED
         )
         

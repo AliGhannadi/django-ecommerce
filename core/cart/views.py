@@ -2,7 +2,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets, status, mixins
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsOwner
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .serializers import CartSerializer
@@ -12,7 +11,7 @@ from django.views.decorators.cache import cache_page
 from django.shortcuts import redirect, render
 # Create your views here.
 class CartViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated]
     serializer_class = CartSerializer
     def get_queryset(self):
         return Cart.objects.filter(user=self.request.user).prefetch_related("cartitems__product")

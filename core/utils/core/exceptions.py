@@ -48,13 +48,18 @@ def custom_exception_handler(exc: Exception, context: dict[str, Any]) -> Respons
             error["detail"] = "Not Authenticated"
         else:
             # error["details"] = response.data
-            response_data = response.data.get('detail', None)
-            if response_data and  type(response_data) != list:
-                error["detail"] = response_data
-            elif response_data and  type(response_data) == list:
-                error["detail"] = response_data[0]
+            if isinstance(response.data, list):
+                error["detail"] = response.data[0] if response.data else ""
+            elif isinstance(response.data, dict):
+                response_data = response.data.get('detail', None)
+                if response_data and type(response_data) != list:
+                    error["detail"] = response_data
+                elif response_data and type(response_data) == list:
+                    error["detail"] = response_data[0]
+                else:
+                    error["detail"] = response.data
             else:
-               error["detail"] = response.data
+                error["detail"] = response.data
         response.data = error_payload
     return response
 
