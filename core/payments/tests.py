@@ -90,7 +90,7 @@ class TestProcessPayment:
 
         mock_factory_instance = MagicMock()
         mock_factory_instance.auto_create.return_value = mock_bank
-        monkeypatch.setattr("payments.views.bankfactories.BankFactory", lambda: mock_factory_instance)
+        monkeypatch.setattr("payments.api.v1.views.bankfactories.BankFactory", lambda: mock_factory_instance)
         return mock_bank
 
     def test_anonymous_cannot_process(self, api_client):
@@ -132,7 +132,7 @@ class TestProcessPayment:
 
         mock_factory_instance = MagicMock()
         mock_factory_instance.auto_create.return_value = mock_bank
-        monkeypatch.setattr("payments.views.bankfactories.BankFactory", lambda: mock_factory_instance)
+        monkeypatch.setattr("payments.api.v1.views.bankfactories.BankFactory", lambda: mock_factory_instance)
 
         response = vendor_client.post(reverse("payments:payment_process"))
         assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -149,7 +149,7 @@ class TestPaymentCallback:
 
         mock_factory_instance = MagicMock()
         mock_factory_instance.create.return_value = mock_bank
-        monkeypatch.setattr("payments.views.bankfactories.BankFactory", lambda: mock_factory_instance)
+        monkeypatch.setattr("payments.api.v1.views.bankfactories.BankFactory", lambda: mock_factory_instance)
 
         mock_bank_record = MagicMock()
         mock_bank_record.bank_type = "test"
@@ -162,10 +162,10 @@ class TestPaymentCallback:
                 "AZBankGatewaysException", (Exception,), {}
             )("Bank error")
             monkeypatch.setattr(
-                "payments.views.AZBankGatewaysException",
+                "payments.api.v1.views.AZBankGatewaysException",
                 mock_bank.verify_from_gateaway.side_effect.__class__,
             )
-        monkeypatch.setattr("payments.views.bank_models", mock_bank_models)
+        monkeypatch.setattr("payments.api.v1.views.bank_models", mock_bank_models)
 
     def test_missing_tracking_code_returns_404(self, api_client):
         response = api_client.get(reverse("payments:payment_callback"))
@@ -229,14 +229,14 @@ class TestPaymentCallback:
 
         mock_factory_instance = MagicMock()
         mock_factory_instance.create.return_value = mock_bank
-        monkeypatch.setattr("payments.views.bankfactories.BankFactory", lambda: mock_factory_instance)
+        monkeypatch.setattr("payments.api.v1.views.bankfactories.BankFactory", lambda: mock_factory_instance)
 
         mock_bank_record = MagicMock()
         mock_bank_record.bank_type = "test"
         mock_bank_models = MagicMock()
         mock_bank_models.Bank.objects.get.return_value = mock_bank_record
         mock_bank_models.Bank.DoesNotExist = type("DoesNotExist", (Exception,), {})
-        monkeypatch.setattr("payments.views.bank_models", mock_bank_models)
+        monkeypatch.setattr("payments.api.v1.views.bank_models", mock_bank_models)
 
         response = api_client.get(
             reverse("payments:payment_callback"),
@@ -252,14 +252,14 @@ class TestPaymentCallback:
 
         mock_factory_instance = MagicMock()
         mock_factory_instance.create.return_value = mock_bank
-        monkeypatch.setattr("payments.views.bankfactories.BankFactory", lambda: mock_factory_instance)
+        monkeypatch.setattr("payments.api.v1.views.bankfactories.BankFactory", lambda: mock_factory_instance)
 
         mock_bank_record = MagicMock()
         mock_bank_record.bank_type = "test"
         mock_bank_models = MagicMock()
         mock_bank_models.Bank.objects.get.return_value = mock_bank_record
         mock_bank_models.Bank.DoesNotExist = type("DoesNotExist", (Exception,), {})
-        monkeypatch.setattr("payments.views.bank_models", mock_bank_models)
+        monkeypatch.setattr("payments.api.v1.views.bank_models", mock_bank_models)
 
         api_client.get(
             reverse("payments:payment_callback"),
