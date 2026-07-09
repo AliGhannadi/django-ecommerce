@@ -22,6 +22,7 @@ api_v1_patterns = [
     path("orders/", include("orders.urls")),
     path("payments/", include("payments.urls")),
     path("social/", include("social.urls")),
+    path("coupons/", include("coupons.urls")),
 ]
 
 urlpatterns = [

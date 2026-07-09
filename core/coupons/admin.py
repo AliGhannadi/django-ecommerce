@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Coupon
-# Register your models here.
+from .models import Coupon, UserCoupon
+
 
 @admin.register(Coupon)
 class CouponAdmin(admin.ModelAdmin):
@@ -18,3 +18,11 @@ class CouponAdmin(admin.ModelAdmin):
     list_filter = ("expiration_date", "created_date", "updated_date")
     search_fields = ("code",)
     readonly_fields = ("created_date", "updated_date")
+
+
+@admin.register(UserCoupon)
+class UserCouponAdmin(admin.ModelAdmin):
+    list_display = ("id", "user", "coupon", "is_used", "used_at")
+    list_filter = ("is_used", "used_at")
+    search_fields = ("user__email", "coupon__code")
+    autocomplete_fields = ("user", "coupon")

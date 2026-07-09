@@ -55,6 +55,7 @@ def callback_getaway_view(request):
         if bank.get_result().is_success:
             payment = Payment.objects.get(transaction=transaction)
             payment.is_successful = True
+            payment.order.is_paid = True
             payment.save()
             transaction.status="completed"
             transaction.save()

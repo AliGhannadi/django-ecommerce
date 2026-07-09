@@ -6,6 +6,7 @@ from orders.models import Order
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.db.models import F
 
 User = get_user_model()
 # Create your models here.
@@ -33,9 +34,15 @@ class CouponManager(models.Manager):
             expiration_date__gt=timezone.now()
         ).first()
         
+    def get_all_active_coupons(self):
+        return self.filter(
+            expiration_date__gt=timezone.now(),
+            current_usages__lt=F('max_global_usage')
+        )
+        
 class Coupon(models.Model):
     code = models.CharField(max_length=15)
-    discount_percent = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
+    discount_percent = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
     expiration_date = models.DateTimeField()
     max_global_usage = models.PositiveIntegerField(default=1)
     current_usages = models.PositiveIntegerField(default=0)
@@ -43,8 +50,12 @@ class Coupon(models.Model):
     is_general = models.BooleanField(default=False)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
+
     def is_valid(self):
-        """Helper to quickly check if the coupon itself is still active."""
+        return (
+            self.current_usages < self.max_global_usage
+            and timezone.now() <= self.expiration_date
+        )
 
     def clean(self):
         super().clean()
