@@ -50,9 +50,7 @@ class Order(models.Model):
         related_name="orders",
         null=True,
         blank=True
-    )
-    is_paid = models.BooleanField(default=False)
-    
+    )    
     
     @property
     def calculate_total_price(self):

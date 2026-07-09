@@ -1,6 +1,20 @@
 from django.contrib import admin
 
-from .models import Payment
+from .models import Payment, Transaction
+
+
+@admin.register(Transaction)
+class TransactionAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "user",
+        "authority",
+        "status",
+        "created_date",
+    )
+    list_filter = ("status", "created_date")
+    search_fields = ("user__email", "user__phone_number", "authority")
+    readonly_fields = ("created_date",)
 
 
 @admin.register(Payment)

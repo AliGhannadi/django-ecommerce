@@ -24,7 +24,7 @@ class Transaction(models.Model):
         return f"Transaction: {self.id} - {self.authority[:10]}... ({self.status})"
 
 class Payment(models.Model):
-    order = models.ForeignKey(
+    order = models.OneToOneField(
         'orders.Order',
         on_delete=models.CASCADE,
         related_name="payments"
