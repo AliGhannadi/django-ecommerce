@@ -208,7 +208,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = config(
     "CORS_ALLOWED_ORIGINS",
     cast=lambda v: [s.strip() for s in v.split(",")],
-    default="http://localhost:5173,http://127.0.0.1:8000,http://127.0.0.1:5173",
+    default="http://localhost:5173,http://127.0.0.1:8000,http://127.0.0.1:5173,http://localhost:8000",
 )
 
 # swagger configs
@@ -228,8 +228,8 @@ SPECTACULAR_SETTINGS = {
         "url": "https://opensource.org/licenses/MIT",
     },
     "SERVERS": [
-        {"url": "http://127.0.0.1:8000", "description": "local server"},
-        # {"url": "https://staging.yourproject.com", "description": "Staging server"},
+        {"url": "http://127.0.0.1:8000", "description": "local server (127.0.0.1)"},
+        {"url": "http://localhost:8000", "description": "local server (localhost)"},
     ],
     "SERVE_INCLUDE_SCHEMA": True,
     "SCHEMA_PATH_PREFIX": "/api/v1",
