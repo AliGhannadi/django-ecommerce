@@ -150,6 +150,10 @@ EMAIL_USE_SSL = config("EMAIL_USE_SSL", cast=bool, default=False)
 EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool, default=False)
 DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="info@example.com")
 
+# Frontend settings
+USE_SSL_CONFIG = config("USE_SSL_CONFIG", cast=bool, default=False)
+FRONTED_DOMAIN = config("FRONTED_DOMAIN", default="localhost:5173")
+
 # Redis & Celery
 
 REDIS_HOST = config("REDIS_HOST", default="127.0.0.1")
@@ -210,8 +214,8 @@ CORS_ALLOWED_ORIGINS = config(
 # swagger configs
 SHOW_SWAGGER = config("SHOW_SWAGGER", cast=bool, default=True)
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Your Project API",
-    "DESCRIPTION": "Comprehensive documentation for Your Project API, including all endpoints, data models, and authentication mechanisms.",
+    "TITLE": "ECommerce Project API",
+    "DESCRIPTION": "Comprehensive documentation for ECommerce Project API, including all endpoints, data models, and authentication mechanisms.",
     "VERSION": "1.0.0",
     "TOS": "https://yourproject.com/terms/",
     "CONTACT": {

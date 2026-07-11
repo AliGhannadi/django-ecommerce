@@ -7,7 +7,7 @@ from django.core.cache import cache
 from products.models import Product
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.response import Response
-from rest_framework.status import status
+from rest_framework import status
 
 @receiver(signals.pre_save, sender=CartItem)
 def update_quantity_of_product_on_save(sender, instance, **kwargs):

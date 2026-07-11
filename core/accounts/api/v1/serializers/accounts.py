@@ -2,15 +2,11 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
 from django.core.validators import RegexValidator
-from django.contrib.auth import get_user_model
-from django.contrib import auth
+from django.contrib.auth import get_user_model, authenticate
 from rest_framework.exceptions import AuthenticationFailed
-from django.shortcuts import get_object_or_404
-import jwt
 from django.conf import settings
 from accounts.api.v1.exceptions import CustomValidationException
 from accounts.messages import Messages
-from django.contrib.auth.backends import ModelBackend
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
 User = get_user_model()
@@ -51,19 +47,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         return User.objects.create_user(**validated_data)
 
 
-class EmailBackend(ModelBackend):
-    def authenticate(self, request, email=None, password=None, **kwargs):
-        UserModel = get_user_model()
-        try:
-            user = UserModel.objects.get(email=email)
-        except UserModel.DoesNotExist:
-            return None
-        
-        if user.check_password(password) and self.user_can_authenticate(user):
-            return user
-        return None
-
-class LoginSerializer(serializers.ModelSerializer,EmailBackend):
+class LoginSerializer(serializers.ModelSerializer):
     """Login serializer"""
     email = serializers.EmailField(
         required=True,
@@ -87,13 +71,11 @@ class LoginSerializer(serializers.ModelSerializer,EmailBackend):
         
         try:
             user = User.objects.get(is_active=True, is_verified=True, email=email)
-           
-        except:
+        except User.DoesNotExist:
             raise CustomValidationException(
                 {'detail': Messages.user_not_found})
             
-        # Authenticate user
-        user = self.authenticate(request=self.context["request"],email=email, password=password)
+        user = authenticate(request=self.context.get("request"), email=email, password=password)
         if not user:
             raise CustomValidationException(
                 {'detail': Messages.invalid_credentials})
