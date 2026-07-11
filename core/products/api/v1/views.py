@@ -10,11 +10,14 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.vary import vary_on_headers
 from django.views.decorators.cache import cache_page
 from ...pagination import Pagination
-
+from django_filters.rest_framework import DjangoFilterBackend
+from products.filters import ProductFilter
 class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly, IsVendorOrReadOnly]
     serializer_class = ProductSerializer
     pagination_class = Pagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ProductFilter
     queryset = Product.objects.filter(is_published=True).select_related("user", "category")
 
     @method_decorator(cache_page(60 * 5, key_prefix='product_list'))

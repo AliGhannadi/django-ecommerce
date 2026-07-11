@@ -87,8 +87,8 @@ class TestProductList:
 
     def test_list_returns_list_of_products(self, api_client, product):
         response = api_client.get(reverse("products-list"))
-        assert isinstance(response.data, list)
-        assert len(response.data) >= 1
+        assert "results" in response.data
+        assert len(response.data["results"]) >= 1
 
 
 # ---------- Test: POST /products/ ----------
