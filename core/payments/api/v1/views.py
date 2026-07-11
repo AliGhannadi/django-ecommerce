@@ -18,6 +18,9 @@ def process_payment(request):
        order = Order.objects.get(user=user)
        amount = order.total_price
        phone_number = order.user.phone_number
+       if Payment.objects.filter(order=order, is_successful=True).exists():
+           return Response({"error": "You already paid for this order."}, status=status.HTTP_404_NOT_FOUND)
+       
        factory = bankfactories.BankFactory()
        try:
            bank = factory.auto_create()

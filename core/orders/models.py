@@ -26,7 +26,7 @@ city_validator = RegexValidator(
 )
 
 class Order(models.Model):
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name="orders"
@@ -46,10 +46,10 @@ class Order(models.Model):
     )
     cart = models.ForeignKey(
         'cart.Cart',
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         related_name="orders",
-        null=True,
-        blank=True
+        null=False,
+        blank=False
     )    
     
     @property

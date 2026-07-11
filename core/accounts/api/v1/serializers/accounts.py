@@ -154,7 +154,7 @@ class PasswordResetTokenVerificationSerializer(serializers.ModelSerializer):
                 token, settings.SECRET_KEY, algorithms=['HS256'])
             user = User.objects.get(id=payload['user_id'])
         except jwt.ExpiredSignatureError as identifier:
-            return CustomValidationException({'detail': Messages.token_expired})
+            raise CustomValidationException({'detail': Messages.token_expired})
         except jwt.exceptions.DecodeError as identifier:
             raise CustomValidationException({'detail': Messages.token_invalid})
 

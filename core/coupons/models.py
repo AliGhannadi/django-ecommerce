@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db.models import F
+from typing import Optional
 
 User = get_user_model()
 # Create your models here.

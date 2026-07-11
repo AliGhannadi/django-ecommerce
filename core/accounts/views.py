@@ -21,8 +21,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-class RegisterViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+class RegisterViewSet(viewsets.GenericViewSet):
     serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
 
@@ -77,13 +76,12 @@ class EmailVerificationAPIView(generics.GenericAPIView):
             )
 
 
-class LoginViewSet(viewsets.ModelViewSet):
+class LoginViewSet(viewsets.GenericViewSet):
     """
     Login view to handle login authentication
     """
     permission_classes = (AllowAny,)
     authentication_classes = ()
-    queryset = User.objects.filter(is_active=True, is_verified=True)
     serializer_class = LoginSerializer
 
     @csrf_exempt
@@ -150,7 +148,7 @@ class ChangePasswordView(viewsets.GenericViewSet):
     serializer_class = ChangePasswordSerializer
     permission_classes = (IsAuthenticated,)
 
-    @action(detail=True, methods=["post"], name="change_password")
+    @action(detail=False, methods=["post"], name="change_password")
     def change_password(self, request, *args, **kwargs):
         self.object = self.request.user
         serializer = self.get_serializer(data=request.data, context={
@@ -232,7 +230,7 @@ class RefreshTokenViewSet(viewsets.GenericViewSet):
 class PasswordResetRequestEmailApiView(viewsets.GenericViewSet):
     serializer_class = PasswordResetRequestEmailSerializer
 
-    @action(detail=True, methods=["post"], name="reset_password_request")
+    @action(detail=False, methods=["post"], name="reset_password_request")
     def reset_password_request(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -250,7 +248,7 @@ class PasswordResetRequestEmailApiView(viewsets.GenericViewSet):
 class PasswordResetSetNewApiView(viewsets.GenericViewSet):
     serializer_class = SetNewPasswordSerializer
 
-    @action(detail=True, methods=["patch"], name="reset_password_confirm")
+    @action(detail=False, methods=["patch"], name="reset_password_confirm")
     def reset_password_confirm(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)

@@ -27,13 +27,13 @@ class Payment(models.Model):
     order = models.OneToOneField(
         'orders.Order',
         on_delete=models.CASCADE,
-        related_name="payments"
+        related_name="payment"
         
     )
     transaction = models.OneToOneField(
         Transaction,
         on_delete=models.CASCADE,
-        related_name="payments"
+        related_name="payment"
     )
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)

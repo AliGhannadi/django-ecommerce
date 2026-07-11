@@ -14,7 +14,7 @@ class UserManager(BaseUserManager):
     for authentication instead of usernames.
     """
 
-    def create_user(self, email, phone_number, password, **extra_fields):
+    def create_user(self, email, username, password, phone_number, **extra_fields):
         """
         Create and save a User with the given email and password.
         """
@@ -24,12 +24,12 @@ class UserManager(BaseUserManager):
             raise ValueError(_("The phone number must be set"))
         
         email = self.normalize_email(email)
-        user = self.model(email=email, phone_number=phone_number, **extra_fields)
+        user = self.model(email=email, username=username, phone_number=phone_number, **extra_fields)
         user.set_password(password)
         user.save()
         return user
 
-    def create_superuser(self, email, password, **extra_fields):
+    def create_superuser(self, email, username, password, phone_number, **extra_fields):
         """
         Create and save a SuperUser with the given email and password.
         """
@@ -42,7 +42,7 @@ class UserManager(BaseUserManager):
             raise ValueError(_("Superuser must have is_staff=True."))
         if extra_fields.get("is_superuser") is not True:
             raise ValueError(_("Superuser must have is_superuser=True."))
-        return self.create_user(email, password, **extra_fields)
+        return self.create_user(email, username, password, phone_number, **extra_fields)
 
 
 def phone_validator(value):
@@ -57,8 +57,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=150,
         unique=True,
         null=False,
-        blank=False,
-        default=""
+        blank=False
     )
     email = models.EmailField(_("email address"), unique=True)
     phone_number = models.CharField(max_length=11, validators=[phone_validator], unique=True, null=False, blank=False)
@@ -89,7 +88,7 @@ class Profile(models.Model):
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        related_name="profiles"
+        related_name="profile"
     )
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)

@@ -15,7 +15,7 @@ class CartViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
     def get_queryset(self):
         return Cart.objects.filter(user=self.request.user).prefetch_related("cartitems__product")
-
+    
     @method_decorator(cache_page(60 * 15, key_prefix='cart_list'))
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -23,7 +23,7 @@ class CartViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     @action(detail=False, methods=["patch"])
     def update_item(self, request):
         item_id = request.data.get("item_id")
-        quantity = request.data.get("quantity")
+        quantity = int(request.data.get("quantity"))
         item = CartItem.objects.get(id=item_id, cart__user=request.user)
         item.quantity = quantity
         item.save()
