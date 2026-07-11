@@ -7,15 +7,18 @@ from products.api.v1.serializers import ProductSerializer
 from products.models import Product
 from cart.models import CartItem, Cart
 from django.utils.decorators import method_decorator
+from django.views.decorators.vary import vary_on_headers
 from django.views.decorators.cache import cache_page
-
+from ...pagination import Pagination
 
 class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly, IsVendorOrReadOnly]
     serializer_class = ProductSerializer
+    pagination_class = Pagination
     queryset = Product.objects.filter(is_published=True).select_related("user", "category")
 
-    @method_decorator(cache_page(60 * 15, key_prefix='product_list'))
+    @method_decorator(cache_page(60 * 5, key_prefix='product_list'))
+    @method_decorator(vary_on_headers("Accept", "Accept-Language"))
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
